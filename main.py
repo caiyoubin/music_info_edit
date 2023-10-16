@@ -26,15 +26,16 @@ def change_name_site_reg(path):
                 continue
             par1 = split[0].strip()
 
-            split__split = split[1].split(".")
-            if len(split__split) != 2:
+            split = split[1].split(".")
+            if len(split) != 2:
                 unchanged_name.append(file)
                 continue
-            par2 = split__split[0].strip()
+            par2 = split[0].strip()
 
             singer = ""
             song = ""
             flag = False
+
             for temp_name in singer_name:
                 if temp_name == par1:
                     singer = par1
@@ -46,9 +47,16 @@ def change_name_site_reg(path):
                     break
 
             if len(singer) == 0:
-                input_info = "请输入歌手对应的数字：\n1、{0}  2、{1}  3、（没有）".format(par1, par2)
-                print(input_info)
-                receive = input()
+
+                if ',' in par1 and ',' not in par2:
+                    receive = "1"
+                elif ',' in par2 and ',' not in par1:
+                    receive = "2"
+                else:
+                    input_info = "请输入歌手对应的数字：\n1、{0}  2、{1}  3、(没有对应选项)".format(par1, par2)
+                    print(input_info)
+                    receive = input()
+
                 if receive == "1":
                     singer = par1
                     flag = True
@@ -64,9 +72,8 @@ def change_name_site_reg(path):
             if flag:
                 continue
 
-            suffix = split__split[1]
-
-            file_replace = singer + " - " + song + "." + suffix
+            suffix = "." + split[1]
+            file_replace = singer + " - " + song + suffix
             new_dir = os.path.join(path, file_replace)
             try:
                 os.rename(dir, new_dir)
@@ -76,9 +83,10 @@ def change_name_site_reg(path):
                 print("new name: " + new_dir)
             print(dir.replace(path, ""), "******", new_dir.replace(path, ""), end='\n\n')
 
+    # 未能更改的歌曲单独移动到一个目录
     print("未符合改名规则的歌曲: " + str(unchanged_name))
     if len(unchanged_name) > 0:
-        unchanged_path = path + "unchanged"
+        unchanged_path = os.path.join(path, "unchanged")
         print("unchanged_path 1: " + unchanged_path)
         if not os.path.exists(unchanged_path):
             os.mkdir(unchanged_path)
