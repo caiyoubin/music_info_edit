@@ -9,8 +9,8 @@ def change_name_site_reg(path):
     singer_name = list()
     singer_name.extend(read_singer("music.json"))
 
-    unchanged_name = list()
     for file in files:
+        unchanged_name = list()
         if len(unchanged_name) > 3:
             break
 
@@ -83,17 +83,16 @@ def change_name_site_reg(path):
                 print("new name: " + new_dir)
             print(dir.replace(path, ""), "******", new_dir.replace(path, ""), end='\n\n')
 
-    # 未能更改的歌曲单独移动到一个目录
-    print("未符合改名规则的歌曲: " + str(unchanged_name))
-    if len(unchanged_name) > 0:
-        unchanged_path = os.path.join(path, "unchanged")
-        print("unchanged_path 1: " + unchanged_path)
-        if not os.path.exists(unchanged_path):
-            os.mkdir(unchanged_path)
-            print("unchanged_path 2: " + unchanged_path)
+        # 未能更改的歌曲单独移动到一个目录
+        print("未符合改名规则的歌曲: " + str(unchanged_name))
+        if len(unchanged_name) > 0:
+            unchanged_path = os.path.join(path, "unchanged")
+            if not os.path.exists(unchanged_path):
+                os.mkdir(unchanged_path)
+                print("Mkdir: " + unchanged_path)
 
-        for temp_name in unchanged_name:
-            os.rename(os.path.join(path, temp_name), os.path.join(unchanged_path, temp_name))
+            for temp_name in unchanged_name:
+                os.rename(os.path.join(path, temp_name), os.path.join(unchanged_path, temp_name))
 
     write_singer("music.json", singer_name)
 
