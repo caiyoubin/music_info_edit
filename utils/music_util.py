@@ -35,12 +35,12 @@ class MusicUtil:
         if file_name.count(" - "):
             parts = file_name.split(" - ")
             if len(parts) != 2:
-                return None, None
+                return "", ""
 
             part1 = parts[0].strip()
             parts = parts[1].split(".")
             if len(parts) != 2:
-                return None, None
+                return "", ""
             part2 = parts[0].strip()
 
             singer = ""
@@ -76,13 +76,13 @@ class MusicUtil:
                         song = part1
                         cls.singers.append(singer)
                     else:
-                        return None, None
+                        return "", ""
             return (
                 singer,
                 song,
             )
 
-        return None, None
+        return "", ""
 
     @classmethod
     def rename_file(cls, file_name, file_path, isdir, singer, song, reverse):
@@ -108,7 +108,6 @@ class MusicUtil:
                 end="\n\n",
             )
         except Exception as e:
-            print(f"************************  warning  *******************")
             print(f"old name: {isdir}")
             print(f"new name: {new_dir}")
             print(f"Error: {e}")

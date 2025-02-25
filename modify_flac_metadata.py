@@ -77,8 +77,6 @@ def modify_metadata(file_path):
 # 3. 主程序
 def main():
     # 设置需要处理的目录
-    directory = r"D:\Music\New folder - Copy"
-    directory = r"D:\Music\New folder - Copy\unchanged - Copy"
     directory = r"D:\Music"
     # directory = r"C:\temp\car_music"
 

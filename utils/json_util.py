@@ -1,67 +1,74 @@
 import json
 import os
 from datetime import datetime
+from typing import List
 
 
 class JsonUtil:
     singers = []
 
-    config_directory = "../config"
+    config_directory = r"..\config"
     json_filename = "music.json"
+
     # 合并路径和文件名
-    json_path = os.path.join(config_directory, json_filename)
-
-
+    @classmethod
+    def get_json_path(cls) -> str:
+        return os.path.join(cls.config_directory, cls.json_filename)
 
     # 获取歌手名字
     @classmethod
-    def get_singers(cls):
+    def get_singers(cls) -> List[str]:
         if not cls.singers:
-            cls.singers = cls.read_data(cls.json_path, "singers")
-            return cls.singers
+            cls.singers = cls.read_data(cls.get_json_path(), "singers")
         return cls.singers
 
     # 获取脏数据
     @classmethod
     def get_dirty_data(cls):
-        return cls.read_data(cls.json_path, "dirty_data")
+        return cls.read_data(cls.get_json_path(), "dirty_data")
 
+    # 读取json文件中的指定数据
     @classmethod
-    def read_data(cls, file_name, data_type):
-        dir_path = os.getcwd() + "\\" + file_name
-        with open(dir_path, "r", encoding="utf-8") as f:
-            content = json.load(f)
-            return list(content[data_type])
+    def read_data(cls, file_path: str, data_type: str):
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = json.load(f)
+                return list(content.get(data_type, []))
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"读取文件 {file_path} 时出错: {e}")
+            return []
 
     # 把歌手信息写入json文件中
     @classmethod
     def write_singer(
         cls,
-        singers,
-        file_name="music.json",
+        singers: List[str],
+        file_name: str = "music.json",
     ):
-        dir_path = os.getcwd() + "\\" + file_name
-        # print(user_path)
-        with open(dir_path, "r", encoding="utf-8") as f:
-            content = json.load(f)
+        file_path = cls.get_json_path()
+        try:
+            # 读取文件内容
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = json.load(f)
 
-        # 获取文件中已有的歌手列表
-        existing_singers = content.get("singers", [])
-        # 将传入的歌手列表与已有的歌手列表合并
-        combined_singers = existing_singers + singers
-        # 去重并转换为集合，然后再转换回列表
-        unique_singers = list(set(combined_singers))
-        # 对歌手列表进行排序
-        unique_singers.sort()
+            # 获取文件中已有的歌手列表
+            existing_singers = content.get("singers", [])
+            combined_singers = existing_singers + singers
 
-        with open(dir_path, "w", encoding="utf-8") as f:
-            # 将合并、去重、排序后的歌手列表存入 content
+            # 去重并排序
+            unique_singers = sorted(set(combined_singers))
+
+            # 更新文件内容
             content["singers"] = unique_singers
-            # 计算新增的歌手数量
             content["add_size"] = len(unique_singers) - content.get("singer_size", 0)
-            # 更新歌手总数
             content["singer_size"] = len(unique_singers)
-            # 更新最后修改时间
             content["last_time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            # 将更新后的内容写入文件
-            json.dump(content, f, indent=4, ensure_ascii=False)
+
+            # 写回文件
+            with open(file_path, "w", encoding="utf-8") as f:
+                json.dump(content, f, indent=4, ensure_ascii=False)
+
+            print(f"歌手信息已更新并写入文件 {file_path}")
+
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"写入文件 {file_path} 时出错: {e}")

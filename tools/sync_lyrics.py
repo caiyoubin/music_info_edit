@@ -137,7 +137,9 @@ def sync_lyrics(music_dir, lyrics_dir):
     主函数，执行脚本的主要流程：读取文件，删除已有的歌词文件，复制匹配的歌词文件，并输出未匹配的文件。
     """
 
-    ignore_file_path = Path("D:/code/music_info_edit/config/sync_lyrics_ignore_music.txt")
+    ignore_file_path = Path(
+        "D:/code/music_info_edit/config/sync_lyrics_ignore_music.txt"
+    )
     if not ignore_file_path.exists():
         print("文件不存在，请检查路径")
 
