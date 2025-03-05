@@ -31,7 +31,6 @@ def clean_car_music_directory(path, valid_file_names, valid_extensions):
                 # 如果文件名不在集合中，删除该文件
                 if file_name_without_extension not in valid_file_names:
                     full_file_path = os.path.join(root, file)
-                    # print(full_file_path)
                     try:
                         os.remove(full_file_path)
                         print(f"Deleted file: {full_file_path}")
