@@ -37,7 +37,12 @@ class MusicUtil:
         if not cls.is_music_file(file_name):
             return "", ""
 
-        segments = file_name.split("-")
+        segments = []
+        if " - " in file_name:
+            segments = file_name.split(" - ")
+        elif "-" in file_name:
+            segments = file_name.split("-")
+
         if len(segments) != 2:
             return "", ""
 
@@ -100,15 +105,8 @@ class MusicUtil:
 
         try:
             os.rename(isdir, new_dir)
-            print(
-                isdir.replace(file_path, ""),
-                "******",
-                new_dir.replace(file_path, ""),
-                end="\n\n",
-            )
+            print(f"[重命名成功]{isdir.replace(file_path, "")} ==> {new_dir.replace(file_path, "")}", end="\n\n")
         except Exception as e:
-            print(f"old name: {isdir}")
-            print(f"new name: {new_dir}")
             print(f"Error: {e}")
 
     # 在调用这个方法之后要使用  JsonUtil.write_singer(JsonUtil.singers) 来保存新增的歌手
