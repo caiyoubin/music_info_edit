@@ -112,6 +112,8 @@ class MusicUtil:
     # 在调用这个方法之后要使用  JsonUtil.write_singer(JsonUtil.singers) 来保存新增的歌手
     @classmethod
     def change_name_site(cls, file_name, file_path, isdir, unchanged_name, reverse) -> None:
+        if not cls.is_music_file(file_name):
+            return
         singer, song = cls.get_singer_and_song(file_name)
 
         if singer and song:
