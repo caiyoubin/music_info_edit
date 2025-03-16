@@ -20,8 +20,6 @@ def change_name_site_reg(file_path, reverse=False):
             continue
 
         if os.path.isdir(isdir):
-            # 把目录名字加到歌手列表, 因为有的目录以歌手名命名
-            singers.append(file)
             change_name_site_reg(isdir)
             continue
 

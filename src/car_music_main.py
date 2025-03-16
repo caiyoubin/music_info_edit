@@ -19,7 +19,7 @@ def main():
 
     # 清理 C:\temp\car_music 中在歌库已删除的歌曲
     car_music_directory = r"C:\temp\car_music"
-    valid_extensions = {".flac", ".mp3", ".wav", ".m4a"}
+    valid_extensions = {".flac", ".mp3", ".wav", ".m4a", ".ogg"}
 
     clean_car_music_directory(car_music_directory, valid_file_names, valid_extensions)
     print(f"Finished cleaning {car_music_directory}")
@@ -30,7 +30,7 @@ def main():
 
     # 第三步
     # 同步 car_music 中的歌词
-    sync_lyrics(r"C:\temp\car_music", r"D:\Documents\lyrics")
+    sync_lyrics(car_music_directory, r"D:\Documents\lyrics")
 
 
 if __name__ == "__main__":
