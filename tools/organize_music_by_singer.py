@@ -1,5 +1,6 @@
 import os
 import shutil
+from pathlib import Path
 from typing import Dict, List
 
 from utils.json_util import JsonUtil
@@ -54,7 +55,7 @@ def filter_singer_directories(dir_dict: Dict[str, str], singers: List[str]) -> D
     return singer_dic
 
 
-def move_files_to_singer_dirs(dir_dict: Dict[str, str], singer_dic: Dict[str, str]):
+def move_files_to_singer_dirs(dir_dict: Dict[str, str], singer_dic: Dict[str, str]) -> Dict[str, List[str]]:
     """
     遍历原字典中的路径，将文件名包含 singer_dic 中 key 的文件移动到对应的目录下。
     如果目标目录中已存在同名文件，则打印两个路径并跳过该文件。
@@ -96,6 +97,29 @@ def move_files_to_singer_dirs(dir_dict: Dict[str, str], singer_dic: Dict[str, st
                 shutil.move(src_file_path, dest_file_path)
                 print(f'Moved {src_file_path} to {dest_file_path}')
                 print()
+            else:
+                if file_singer not in file_path_dict:
+                    file_path_dict[file_singer] = []
+                file_path_dict[file_singer].append(file_path)
+
+    return file_path_dict
+
+
+def create_dir_and_move(root_dir: str, file_path_dict: Dict[str, List[str]], count: int = 5):
+    # 将 root_dir 转换为 Path 对象
+    root_dir = Path(root_dir)
+
+    for key, value in file_path_dict.items():
+        if len(value) == count:
+            new_dir_path = root_dir / key
+            # 创建目录（如果目录不存在）
+            if not new_dir_path.exists():
+                new_dir_path.mkdir(parents=True, exist_ok=True)
+            for file_path in value:
+                file_name = Path(file_path).name
+                dest_file_path = new_dir_path / file_name
+                shutil.move(file_path, dest_file_path)
+                print(f'Moved {file_path} to {dest_file_path}')
 
 
 def main():
@@ -113,10 +137,14 @@ def main():
     singer_dic = filter_singer_directories(dir_dict, singers)
 
     # 步骤 3: 移动文件到对应的歌手目录
-    move_files_to_singer_dirs(dir_dict, singer_dic)
+    file_path_dict = move_files_to_singer_dirs(dir_dict, singer_dic)
+
+    # 步骤 4: 单个演唱者的文件数大于等于指定数(默认 5), 创建文件夹, 并把文件移入
+    create_dir_and_move(root_dir, file_path_dict, )
 
     JsonUtil.write_singer(singers)
     print("文件整理完成！")
+
 
 if __name__ == "__main__":
     main()
