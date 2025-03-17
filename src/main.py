@@ -1,5 +1,6 @@
 import os
 
+from tools import organize_music_by_singer
 from utils.json_util import JsonUtil
 from utils.music_util import MusicUtil
 
@@ -45,7 +46,9 @@ if __name__ == "__main__":
     )  # 演唱者名字放在前面， 以 - 分割
 
     JsonUtil.write_singer(JsonUtil.get_singers())
-    # todo 分组, 个人单曲大于等于5, 单独放入个人目录
+
+    # 把文件移动到已存在歌手目录的目录
+    organize_music_by_singer.main()
 
     # TODO 更改文件里的标签
     # 按照文件的后缀名来分别处理

@@ -33,6 +33,8 @@ class MusicUtil:
         """
         根据文件名提取歌手和歌曲的名称。
         如果未能自动识别，会提示用户输入对应的数字。
+
+        !!! 在函数调用此方法之后, 要在结束时调用JsonUtil 中的保存方法
         """
         if not cls.is_music_file(file_name):
             return "", ""
