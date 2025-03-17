@@ -44,6 +44,7 @@ def find_directories(root_dir: str, ignore_list: List[str] = None) -> Dict[str, 
     # 只保留路径，去掉深度信息
     return {k: v[1] for k, v in dir_dict.items()}
 
+
 def filter_singer_directories(dir_dict: Dict[str, str], singers: List[str]) -> Dict[str, str]:
     """
     根据 singers 列表过滤目录字典，将匹配的目录移动到 singer_dic 中，并从原字典中移除。
@@ -61,6 +62,7 @@ def move_files_to_singer_dirs(dir_dict: Dict[str, str], singer_dic: Dict[str, st
     如果目标目录中已存在同名文件，则打印两个路径并跳过该文件。
     只遍历指定目录下的文件，不进入子目录。
     """
+    file_path_dict = {}
     keys = singer_dic.keys()
     for dir_path in dir_dict.values():
 
